@@ -15,7 +15,8 @@ namespace PeriodTrackerMVC.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var model = TempData["user"];
+            return View(model);
         }
 
         public IActionResult Privacy()

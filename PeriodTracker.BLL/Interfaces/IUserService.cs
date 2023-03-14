@@ -10,8 +10,8 @@ namespace PeriodTracker.BLL.Interfaces
 {
     public interface IUserService
     {
-        public Task<bool> LogInAsync(string email, string password);
+        public Task<Response<UserVM>> LogInAsync(string email, string password);
         public string LogOut();
-        public Task<UserVM> SignUpAsync(UserVM user);
+        public Task<Response<UserVM>> SignUpAsync(UserVM user);
     }
 }

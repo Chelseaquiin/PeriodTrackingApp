@@ -18,15 +18,31 @@ namespace PeriodTrackerMVC.Controllers
             return View();
         }
 
+        [HttpPost]
         public async Task<IActionResult> LogIn(string email, string password)
         {
-            if(!ModelState.IsValid)
+            /*if (!ModelState.IsValid)
             {
-                return Problem("Incorrect email or Password");
-            }
+                return RedirectToAction("LogIn");
+            }*/
 
-            bool response = await _userService.LogInAsync(email, password);
-            return View(response);
+            var response = await _userService.LogInAsync(email, password);
+            if (response.IsSuccessful)
+            {
+                TempData["user"] = response.Result.UserName;
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                TempData["errorMessage"] = response.Message;
+                return View("LogIn");
+            }
+            
+        }
+        public IActionResult LogIn()
+        {
+            var model = TempData["errorMessage"];
+            return View(model);
         }
 
         public IActionResult LogOut()
@@ -38,7 +54,22 @@ namespace PeriodTrackerMVC.Controllers
         {
 
             var response = await _userService.SignUpAsync(user);
+            if (!response.IsSuccessful)
+            {
+                return Ok(response.Message);
+            }
+            else
+            {
+                TempData["user"] = response.Result.UserName;
+
+                return RedirectToAction("Index", "Home");
+            }
+
+        }
+        public IActionResult SignUp()
+        {
             return View();
         }
+
     }
 }

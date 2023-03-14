@@ -42,7 +42,7 @@ namespace PeriodTrackerMVC
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Authentication}/{action=Index}/{id?}");
+                pattern: "{controller=Authentication}/{action=LogIn}");
 
             app.Run();
         }
