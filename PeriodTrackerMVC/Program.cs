@@ -22,6 +22,7 @@ namespace PeriodTrackerMVC
 
             });
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<ITrackerService, TrackerService>();
 
             var app = builder.Build();
 

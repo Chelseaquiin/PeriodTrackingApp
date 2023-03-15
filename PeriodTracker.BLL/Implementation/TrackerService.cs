@@ -1,25 +1,137 @@
 ﻿using PeriodTracker.BLL.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PeriodTracker.BLL.Model;
+using PeriodTracker.DAL.Models;
+using PeriodTracker.DAL.Enums;
 
 namespace PeriodTracker.BLL.Implementation
 {
     public class TrackerService : ITrackerService
     {
-        public void FertilityWindow()
+        private readonly PeriodTrackerDbContext _context;
+
+        public TrackerService(PeriodTrackerDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public async Task<Response<PeriodDetail>> FertilityWindowAsync(PeriodDetail periodDetail)
+        {
+            if (periodDetail is null)
+            {
+                return new Response<PeriodDetail>
+                {
+                    Message = "Invalid Period Details",
+                    IsSuccessful = false,
+
+                };
+            }
+            var detail = new PeriodDetail
+            {
+                LastPeriod = periodDetail.LastPeriod,
+                CycleLength = periodDetail.CycleLength,
+                PeriodLength = periodDetail.PeriodLength,
+                Note = periodDetail.Note,
+            };
+            var ovulationDay = detail.CycleLength / (int)FertilityWindow.Ovulation;
+            var fertilityWindow = ovulationDay - FertilityWindow.Fertility;
+            detail.LastPeriod = detail.LastPeriod.AddDays((double)fertilityWindow);
+            await _context.PeriodDetails.AddAsync(detail);
+            var saveResult = await _context.SaveChangesAsync();
+            var result = new Response<PeriodDetail>
+            {
+                Message = "Fertility window details",
+                IsSuccessful = true,
+                Result = detail
+            };
+            return saveResult > 0 ? result : new Response<PeriodDetail>
+            {
+                Message = "Invalid details",
+                IsSuccessful = false,
+
+            };
+            
+
+
+
         }
 
-        public void NextPeriod()
+        public async Task<Response<PeriodDetail>> NextPeriodAsync(PeriodDetail periodDetail)
         {
-            throw new NotImplementedException();
+            if (periodDetail is null)
+            {
+                return new Response<PeriodDetail>
+                {
+                    Message = "Invalid Period Details",
+                    IsSuccessful = false,
+
+                };
+            }
+            var detail = new PeriodDetail
+            {
+                LastPeriod = periodDetail.LastPeriod,
+                CycleLength = periodDetail.CycleLength,
+                PeriodLength = periodDetail.PeriodLength,
+                Note = periodDetail.Note,
+            };
+            detail.LastPeriod = detail.LastPeriod.AddDays(detail.CycleLength);
+            await _context.PeriodDetails.AddAsync(detail);
+            var saveResult = await _context.SaveChangesAsync();
+            var result = new Response<PeriodDetail>
+            {
+                Message = "Next period details",
+                IsSuccessful = true,
+                Result = detail
+            };
+            return saveResult > 0 ? result : new Response<PeriodDetail>
+            {
+                Message = "Invalid details",
+                IsSuccessful = false,
+
+            };
+          
+            
+
+            
         }
 
-        public void SafePeriod()
+        public async Task<Response<PeriodDetail>> OvulationDayAsync(PeriodDetail periodDetail)
+        {
+            if (periodDetail is null)
+            {
+                return new Response<PeriodDetail>
+                {
+                    Message = "Invalid Period Details",
+                    IsSuccessful = false,
+
+                };
+            }
+            var detail = new PeriodDetail
+            {
+                LastPeriod = periodDetail.LastPeriod,
+                CycleLength = periodDetail.CycleLength,
+                PeriodLength = periodDetail.PeriodLength,
+                Note = periodDetail.Note,
+            };
+            var ovulationDay = detail.CycleLength / (int)FertilityWindow.Ovulation;
+            detail.LastPeriod = detail.LastPeriod.AddDays(ovulationDay);
+            await _context.PeriodDetails.AddAsync(detail);
+            var saveResult = await _context.SaveChangesAsync();
+            var result = new Response<PeriodDetail>
+            {
+                Message = "Ovulation day details",
+                IsSuccessful = true,
+                Result = detail
+            };
+            return saveResult > 0 ? result : new Response<PeriodDetail>
+            {
+                Message = "Invalid details",
+                IsSuccessful = false,
+
+            };
+
+            
+        }
+
+        public async Task<Response<PeriodDetail>> SafePeriodAsync(PeriodDetail periodDetail)
         {
             throw new NotImplementedException();
         }

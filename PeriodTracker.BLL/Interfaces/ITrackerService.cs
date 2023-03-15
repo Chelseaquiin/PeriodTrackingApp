@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PeriodTracker.BLL.Model;
+using PeriodTracker.DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +10,9 @@ namespace PeriodTracker.BLL.Interfaces
 {
     public interface ITrackerService
     {
-        public void NextPeriod();
-        public void FertilityWindow();
-        public void SafePeriod();
+        public Task<Response<PeriodDetail>> NextPeriodAsync(PeriodDetail periodDetail);
+        public Task<Response<PeriodDetail>> FertilityWindowAsync(PeriodDetail periodDetail);
+        public Task<Response<PeriodDetail>> SafePeriodAsync(PeriodDetail periodDetail);
+        public Task<Response<PeriodDetail>> OvulationDayAsync(PeriodDetail periodDetail);
     }
 }
