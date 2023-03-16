@@ -2,6 +2,7 @@
 using PeriodTracker.BLL.Model;
 using Microsoft.AspNetCore.Mvc;
 using PeriodTracker.DAL.Models;
+using System.Reflection.Metadata.Ecma335;
 
 namespace PeriodTrackerMVC.Controllers
 {
@@ -14,26 +15,67 @@ namespace PeriodTrackerMVC.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            var model = TempData["period"];
+            return View(model);
         }
-        public async Task<IActionResult> FertilityWindow(PeriodDetail periodDetail)
+        public async Task<IActionResult> FertilityWindow(PeriodDetailsVM periodDetail)
         {
             var response = await _trackerService.FertilityWindowAsync(periodDetail);
             return View();
         }
-        public async Task<IActionResult> NextPeriod(PeriodDetail periodDetail)
+        [HttpPost]
+        public IActionResult GetNextPeriod(string lastPeriodStartDateString, byte cycleLength, byte periodLength)
         {
-            var response = await _trackerService.NextPeriodAsync(periodDetail);
-            return View();
+            var lastPeriodStartDate = DateTime.Parse(lastPeriodStartDateString);
+            var response =  _trackerService.GetNextPeriod(lastPeriodStartDate, cycleLength, periodLength);
+            if (response.IsSuccessful)
+            {
+                TempData["period"] = $"Your next period starts on {response.Result.startDate} and ends on {response.Result.endDate}";
+                return RedirectToAction("Index"); 
+               
+            }
+            else
+            {
+                TempData["errorMessage"] = response.Message;
+                return View("NextPeriod");
+            }
+           
         }
-        public async Task<IActionResult> SafePeriod(PeriodDetail periodDetail)
+        public IActionResult NextPeriod()
         {
-            var response = await _trackerService.NextPeriodAsync(periodDetail); 
-            return View();
+            var model = TempData["errorMessage"];
+            return View(model);
         }
-        public async Task<IActionResult> OvulationDay(PeriodDetail periodDetail)
+        
+        public async Task<IActionResult> SafePeriod(PeriodDetailsVM periodDetail)
         {
-            var response = await _trackerService.OvulationDayAsync(periodDetail);
+            /*var response = await _trackerService.GetNext(periodDetail);
+            if (response.IsSuccessful)
+            {
+                TempData["user"] = response.Result.LastPeriod;
+                return View(response);
+            }
+            else
+            {
+                TempData["errorMessage"] = response.Message;
+                return View("SafePeriod");
+            }*/
+            return View();
+            
+        }
+        public async Task<IActionResult> OvulationDay(PeriodDetailsVM periodDetail)
+        {
+            /*var response = await _trackerService.OvulationDayAsync(periodDetail);
+            if (response.IsSuccessful)
+            {
+                TempData["user"] = response.Result.LastPeriod;
+                return View(response);
+            }
+            else
+            {
+                TempData["errorMessage"] = response.Message;
+                return View("SafePeriod");
+            }*/
             return View();
         }
     }

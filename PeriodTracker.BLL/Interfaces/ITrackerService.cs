@@ -10,9 +10,10 @@ namespace PeriodTracker.BLL.Interfaces
 {
     public interface ITrackerService
     {
-        public Task<Response<PeriodDetail>> NextPeriodAsync(PeriodDetail periodDetail);
-        public Task<Response<PeriodDetail>> FertilityWindowAsync(PeriodDetail periodDetail);
-        public Task<Response<PeriodDetail>> SafePeriodAsync(PeriodDetail periodDetail);
-        public Task<Response<PeriodDetail>> OvulationDayAsync(PeriodDetail periodDetail);
+        public Response<(DateTime startDate, DateTime endDate)> GetNextPeriod(DateTime lastPeriodStartDate, byte cycleLength, byte periodLength);
+        public Task<Response<PeriodDetailsVM>> FertilityWindowAsync(PeriodDetailsVM periodDetail);
+        public Task<Response<PeriodDetailsVM>> SafePeriodAsync(PeriodDetailsVM periodDetail);
+        public DateTime OvulationDayAsync(DateTime lastPeriodStartDate, byte cycleLength);
+        public Task<Response<PeriodDetailsVM>> GetPeriodDetailsAsync(PeriodDetailsVM periodDetail);
     }
 }
