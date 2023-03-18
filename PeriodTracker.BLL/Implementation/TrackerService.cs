@@ -13,45 +13,23 @@ namespace PeriodTracker.BLL.Implementation
         {
             _context = context;
         }
-        public async Task<Response<PeriodDetailsVM>> FertilityWindowAsync(PeriodDetailsVM periodDetail)
+        public Response<(DateTime, DateTime)> GetFertilityWindow(DateTime lastPeriodStartDate)
         {
-            if (periodDetail is null)
-            {
-                return new Response<PeriodDetailsVM>
-                {
-                    Message = "Invalid Period Details",
-                    IsSuccessful = false,
+            var startDate = (int)FertilityWindow.Ovulation - (int)FertilityWindow.Fertility;
+            var fertilityStartDate = lastPeriodStartDate.AddDays(startDate);
+            var fertilityEndDate = lastPeriodStartDate.AddDays((int)FertilityWindow.Ovulation);
 
-                };
-            }
-            var detail = new PeriodDetail
-            {
-                LastPeriod = periodDetail.LastPeriod,
-                CycleLength = periodDetail.CycleLength,
-                PeriodLength = periodDetail.PeriodLength,
-                Note = periodDetail.Note
-            };
-            var ovulationDay = detail.CycleLength / (int)FertilityWindow.Ovulation;
-            var fertilityWindow = ovulationDay - FertilityWindow.Fertility;
-            detail.LastPeriod = detail.LastPeriod.AddDays((double)fertilityWindow);
-            await _context.PeriodDetails.AddAsync(detail);
-            var saveResult = await _context.SaveChangesAsync();
-            var result = new Response<PeriodDetailsVM>
-            {
-                Message = "Fertility window details",
-                IsSuccessful = true,
-                Result = periodDetail
-            };
-            return saveResult > 0 ? result : new Response<PeriodDetailsVM>
-            {
-                Message = "Invalid details",
-                IsSuccessful = false,
-
-            };
-            
-
-
-
+            return lastPeriodStartDate > DateTime.MinValue ?
+           new Response<(DateTime startDate, DateTime endDate)>
+           {
+               Message = "Succesful",
+               IsSuccessful = true,
+               Result = (startDate: fertilityStartDate, endDate: fertilityEndDate)
+           } : new Response<(DateTime, DateTime)>
+           {
+               Message = "Invalid fields",
+               IsSuccessful = false,
+           };
         }
 
         public Response<(DateTime, DateTime)> GetNextPeriod(DateTime lastPeriodStartDate, byte cycleLength, byte periodLength)
@@ -68,65 +46,48 @@ namespace PeriodTracker.BLL.Implementation
            } : new Response<(DateTime, DateTime)>
            {
                Message = "Invalid fields",
-               IsSuccessful = false,
-               
+               IsSuccessful = false,  
            };
         }
-            
-
-
-        public DateTime GetOvulationDayAsync(DateTime lastPeriodStartDate, byte cycleLength)
+        public Response<DateTime> GetOvulationDay(DateTime lastPeriodStartDate)
         {
-           /* if (periodDetail is null)
-            {
-                return new Response<PeriodDetailsVM>
-                {
-                    Message = "Invalid Period Details",
-                    IsSuccessful = false,
+            var ovulationDate = lastPeriodStartDate.AddDays((int)FertilityWindow.Ovulation);
 
-                };
-            }
-            var detail = new PeriodDetail
-            {
-                LastPeriod = periodDetail.LastPeriod,
-                CycleLength = periodDetail.CycleLength,
-                PeriodLength = periodDetail.PeriodLength,
-                Note = periodDetail.Note,
-            };
-            var ovulationDay = detail.CycleLength / (int)FertilityWindow.Ovulation;
-            detail.LastPeriod = detail.LastPeriod.AddDays(ovulationDay);
-            await _context.PeriodDetails.AddAsync(detail);
-            var saveResult = await _context.SaveChangesAsync();
-            var result = new Response<PeriodDetailsVM>
-            {
-                Message = "Ovulation day details",
-                IsSuccessful = true,
-                Result = periodDetail
-            };
-            return saveResult > 0 ? result : new Response<PeriodDetailsVM>
-            {
-                Message = "Invalid details",
-                IsSuccessful = false,
+            return lastPeriodStartDate > DateTime.MinValue ?
+           new Response<DateTime>
+           {
+               Message = "Succesful",
+               IsSuccessful = true,
+               Result = ovulationDate
+           } : new Response<DateTime>
+           {
+               Message = "Invalid fields",
+               IsSuccessful = false,
 
-            };
+           };
 
-           */
-           throw new NotImplementedException();
         }
-
         public Task<Response<PeriodDetailsVM>> GetPeriodDetailsAsync(PeriodDetailsVM periodDetail)
         {
             throw new NotImplementedException();
         }
-
-        public DateTime OvulationDayAsync(DateTime lastPeriodStartDate, byte cycleLength)
+        public Response<(DateTime, DateTime)> GetSafePeriod(DateTime lastPeriodStartDate, byte cycleLength)
         {
-            throw new NotImplementedException();
-        }
+            var safeDate = (int)FertilityWindow.Ovulation + (int)FertilityWindow.Fertility;
+            var safePeriodStartDate = lastPeriodStartDate.AddDays(safeDate);
+            var safePeriodEndDate = safePeriodStartDate.AddDays((int)FertilityWindow.SafeDate);
 
-        public Task<Response<PeriodDetailsVM>> SafePeriodAsync(PeriodDetailsVM periodDetail)
-        {
-            throw new NotImplementedException();
+            return lastPeriodStartDate > DateTime.MinValue && cycleLength >= 28 ?
+           new Response<(DateTime startDate, DateTime endDate)>
+           {
+               Message = "Succesful",
+               IsSuccessful = true,
+               Result = (startDate: safePeriodStartDate, endDate: safePeriodEndDate)
+           } : new Response<(DateTime, DateTime)>
+           {
+               Message = "Invalid fields",
+               IsSuccessful = false,
+           };
         }
     }
 }

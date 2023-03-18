@@ -10,5 +10,6 @@ namespace PeriodTracker.DAL.Enums
     {
         Ovulation = 14,
         Fertility = 5,
+        SafeDate = 9
     }
 }

@@ -1,8 +1,5 @@
-﻿using PeriodTracker.BLL.Interfaces;
-using PeriodTracker.BLL.Model;
-using Microsoft.AspNetCore.Mvc;
-using PeriodTracker.DAL.Models;
-using System.Reflection.Metadata.Ecma335;
+﻿using Microsoft.AspNetCore.Mvc;
+using PeriodTracker.BLL.Interfaces;
 
 namespace PeriodTrackerMVC.Controllers
 {
@@ -18,65 +15,97 @@ namespace PeriodTrackerMVC.Controllers
             var model = TempData["period"];
             return View(model);
         }
-        public async Task<IActionResult> FertilityWindow(PeriodDetailsVM periodDetail)
-        {
-            var response = await _trackerService.FertilityWindowAsync(periodDetail);
-            return View();
-        }
         [HttpPost]
-        public IActionResult GetNextPeriod(string lastPeriodStartDateString, byte cycleLength, byte periodLength)
+        public IActionResult GetFertilityWindow(string lastPeriodStartDateString)
         {
             var lastPeriodStartDate = DateTime.Parse(lastPeriodStartDateString);
-            var response =  _trackerService.GetNextPeriod(lastPeriodStartDate, cycleLength, periodLength);
+            var response = _trackerService.GetFertilityWindow(lastPeriodStartDate);
             if (response.IsSuccessful)
             {
-                TempData["period"] = $"Your next period starts on {response.Result.startDate} and ends on {response.Result.endDate}";
-                return RedirectToAction("Index"); 
-               
+                TempData["fertilityPeriod"] = $"Your fertility window starts on {response.Result.startDate} and ends on {response.Result.endDate}";
+                return RedirectToAction("Index");
+
             }
             else
             {
                 TempData["errorMessage"] = response.Message;
                 return View("NextPeriod");
             }
-           
         }
-        public IActionResult NextPeriod()
+        [HttpPost]
+        public IActionResult GetNextPeriod(string lastPeriodStartDateString, byte cycleLength, byte periodLength)
+        {
+            var lastPeriodStartDate = DateTime.Parse(lastPeriodStartDateString);
+            var response = _trackerService.GetNextPeriod(lastPeriodStartDate, cycleLength, periodLength);
+            if (response.IsSuccessful)
+            {
+                TempData["period"] = $"Your next period starts on {response.Result.startDate} and ends on {response.Result.endDate}";
+                return RedirectToAction("Index");
+
+            }
+            else
+            {
+                TempData["errorMessage"] = response.Message;
+                return View("NextPeriod");
+            }
+
+        }
+        public IActionResult GetNextPeriod()
         {
             var model = TempData["errorMessage"];
             return View(model);
         }
-        
-        public async Task<IActionResult> SafePeriod(PeriodDetailsVM periodDetail)
+        public IActionResult GetOvulationDay()
         {
-            /*var response = await _trackerService.GetNext(periodDetail);
-            if (response.IsSuccessful)
-            {
-                TempData["user"] = response.Result.LastPeriod;
-                return View(response);
-            }
-            else
-            {
-                TempData["errorMessage"] = response.Message;
-                return View("SafePeriod");
-            }*/
-            return View();
-            
+            var model = TempData["errorMessage"];
+            return View(model);
         }
-        public async Task<IActionResult> OvulationDay(PeriodDetailsVM periodDetail)
+        public IActionResult GetSafePeriod()
         {
-            /*var response = await _trackerService.OvulationDayAsync(periodDetail);
+            var model = TempData["errorMessage"];
+            return View(model);
+        }
+        public IActionResult GetFertilityWindow()
+        {
+            var model = TempData["errorMessage"];
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult GetSafePeriod(string lastPeriodStartDateString, byte cycleLength)
+        {
+            var safeDate = DateTime.Parse(lastPeriodStartDateString);
+            var response = _trackerService.GetSafePeriod(safeDate, cycleLength);
             if (response.IsSuccessful)
             {
-                TempData["user"] = response.Result.LastPeriod;
-                return View(response);
+                TempData["safePeriod"] = $"Your safe period starts on {response.Result.Item1} and ends on {response.Result.Item2}";
+                return RedirectToAction("Index");
+
             }
             else
             {
                 TempData["errorMessage"] = response.Message;
-                return View("SafePeriod");
-            }*/
-            return View();
+                return View("NextPeriod");
+            }
+
+        }
+        [HttpPost]
+        public IActionResult GetOvulationDay(string lastPeriodStartDateString)
+        {
+            var ovulationDate = DateTime.Parse(lastPeriodStartDateString);
+            var response = _trackerService.GetOvulationDay(ovulationDate);
+            if (response.IsSuccessful)
+            {
+                TempData["ovulationPeriod"] = $"Your ovulation day is on {response.Result}";
+                return RedirectToAction("Index");
+
+            }
+            else
+            {
+                TempData["errorMessage"] = response.Message;
+                return View("NextPeriod");
+            }
+
         }
     }
 }

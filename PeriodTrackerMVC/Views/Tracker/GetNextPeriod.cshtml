@@ -1,20 +1,46 @@
-﻿@model string;
+﻿<style>
+    body{
+        background-color: indianred;
+    }
+    .last-period{
+        float:left;
+       
+    }
+    .cycle-length{
+        float: right;
+    }
+    .period-length{
+        margin-left: 65vh;
+        margin-right: 65vh;
+    }
+    .form-group{
+        margin-top: 20vh;
+    }
+    .start-tracking{
+        margin-left: 70vh;
+        margin-right: 70vh;
+        margin-top: 10vh;
+    }
+</style>
+
+
+@model string;
 
 @{
     ViewData["Title"] = "Period Details";
 }
 <h2>Period Info</h2>
 <hr />
-<form asp-action="GetNextPeriod">
-    <div class="form-group">
+<form asp-action="GetNextPeriod" class="form-group">
+    <div class="last-period">
         <label for="exampleInputEmail1">Last Period</label>
         <input name="lastPeriodStartDateString" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
     </div>
-    <div class="form-group">
+    <div class="cycle-length">
         <label for="exampleInputPassword1">Cycle Length</label>
         <input name="cycleLength" type="number" class="form-control" id="exampleInputPassword1">
     </div>
-    <div class="form-group">
+    <div class="period-length">
         <label for="exampleInputEmail1">Period Length</label>
         <input name="periodLength" type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
     </div>
@@ -22,7 +48,7 @@
         <label for="exampleInputPassword1">Note</label>
         <input asp-for="Note" type="text" class="form-control" id="exampleInputPassword1" placeholder="Add a description">    
     </div>*@
-    <div class="form-group">
-        <input type="submit" value="Save" class="btn btn-primary" />
+    <div class="start-tracking">
+        <input type="submit" value="Start Tracking" class="btn btn-primary" />
     </div>
 </form>

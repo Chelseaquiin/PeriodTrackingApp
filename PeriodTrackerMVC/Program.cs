@@ -43,7 +43,7 @@ namespace PeriodTrackerMVC
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Tracker}/{action=NextPeriod}");
+                pattern: "{controller=Tracker}/{action=GetNextPeriod}");
 
             app.Run();
         }
