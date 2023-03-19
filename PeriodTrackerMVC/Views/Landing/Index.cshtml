@@ -19,9 +19,8 @@
             margin-top: 20vh;
         }
 
-        .start-tracking {
-            margin-left: 70vh;
-            margin-right: 70vh;
+        .row {
+           text-align:center;
             margin-top: 10vh;
         }
     </style>
@@ -42,28 +41,40 @@
         <span class="alert alert-success">@nextPeriod</span>
     }
     
-    <form asp-action="GetNextPeriod" class="form-group">
-        <div class="last-period">
-            <label for="exampleInputEmail1">Last Period</label>
-            <input asp-for="LastPeriod" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-            <span asp-validation-for="LastPeriod" class="text-danger"></span>
-        </div>
-        <div class="cycle-length">
-            <label for="exampleInputPassword1">Cycle Length</label>
-            <input asp-for="CycleLength" type="number" class="form-control" id="exampleInputPassword1">
-            <span asp-validation-for="CycleLength" class="text-danger"></span>
-        </div>
-        <div class="period-length">
-            <label for="exampleInputEmail1">Period Length</label>
-            <input asp-for="PeriodLength" type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-            <span asp-validation-for="PeriodLength" class="text-danger"></span>
-        </div>
-        @*<div class="form-group">
+<form asp-action="GetNextPeriod" class="form-group">
+    <div class="last-period">
+        <label for="exampleInputEmail1">Last Period</label>
+        <input asp-for="LastPeriod" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        <span asp-validation-for="LastPeriod" class="text-danger"></span>
+    </div>
+    <div class="cycle-length">
+        <label for="exampleInputPassword1">Cycle Length</label>
+        <input asp-for="CycleLength" type="number" class="form-control" id="exampleInputPassword1">
+        <span asp-validation-for="CycleLength" class="text-danger"></span>
+    </div>
+    <div class="period-length">
+        <label for="exampleInputEmail1">Period Length</label>
+        <input asp-for="PeriodLength" type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        <span asp-validation-for="PeriodLength" class="text-danger"></span>
+    </div>
+    @*<div class="form-group">
         <label for="exampleInputPassword1">Note</label>
         <input asp-for="Note" type="text" class="form-control" id="exampleInputPassword1" placeholder="Add a description">
         </div>*@
-        <div class="start-tracking">
-            <input type="submit" value="Start Tracking" class="btn btn-primary" />
-        </div>
-    </form>
+<div class="row">
+    <div class="col-sm">
+        <input type="submit" value="Start Tracking" class="btn btn-primary" />
+    </div>
+    <div class="col-sm">
+        <input type="submit" value="Start Tracking" class="btn btn-primary" />
+    </div>
+    <div class="col-sm">
+        <input type="submit" value="Start Tracking" class="btn btn-primary" />
+    </div>
+    <div class="col-sm">
+        <input type="submit" value="Start Tracking" class="btn btn-primary" />
+    </div>
+</div>
+   
+</form>
 </div>
