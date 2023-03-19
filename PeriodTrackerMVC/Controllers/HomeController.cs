@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PeriodTracker.BLL.Interfaces;
 using PeriodTrackerMVC.Models;
 using System.Diagnostics;
 
@@ -7,16 +8,31 @@ namespace PeriodTrackerMVC.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ITrackerService trackerService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ITrackerService trackerService)
         {
             _logger = logger;
+            this.trackerService = trackerService;
         }
 
         public IActionResult Index()
         {
-            var model = TempData["user"];
-            return View(model);
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetMyNextPeriod()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId.HasValue)
+            {
+                var response = await trackerService.GetMyNextPeriod(userId.Value);
+                ViewData["nextPeriod"] = $"your period is on {response.Result.Item2}";
+
+                return View();
+            }
+            return View("Index");
         }
 
         public IActionResult Privacy()
@@ -28,6 +44,14 @@ namespace PeriodTrackerMVC.Controllers
             return View();
         }
         public IActionResult Contact()
+        {
+            return View();
+        }
+        public IActionResult SignUp()
+        {
+            return View();
+        }
+        public IActionResult LogIn()
         {
             return View();
         }

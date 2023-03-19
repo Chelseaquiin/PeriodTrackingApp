@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PeriodTracker.BLL.Interfaces;
+using PeriodTracker.BLL.Model;
 
 namespace PeriodTrackerMVC.Controllers
 {
@@ -22,6 +23,7 @@ namespace PeriodTrackerMVC.Controllers
             var response = _trackerService.GetFertilityWindow(lastPeriodStartDate);
             if (response.IsSuccessful)
             {
+                //this is me contolling your screen
                 TempData["fertilityPeriod"] = $"Your fertility window starts on {response.Result.startDate} and ends on {response.Result.endDate}";
                 return RedirectToAction("Index");
 
@@ -32,11 +34,20 @@ namespace PeriodTrackerMVC.Controllers
                 return View("NextPeriod");
             }
         }
+
         [HttpPost]
-        public IActionResult GetNextPeriod(string lastPeriodStartDateString, byte cycleLength, byte periodLength)
+        public IActionResult GetNextPeriod(PeriodDetailsVM periodDetails)
         {
-            var lastPeriodStartDate = DateTime.Parse(lastPeriodStartDateString);
-            var response = _trackerService.GetNextPeriod(lastPeriodStartDate, cycleLength, periodLength);
+            if (!ModelState.IsValid)
+                return View(periodDetails);
+
+            var lastPeriodStartDate = DateTime.Parse(periodDetails.LastPeriod);
+
+            var response = _trackerService.GetNextPeriod(
+                lastPeriodStartDate,
+                periodDetails.CycleLength,
+                periodDetails.PeriodLength);
+
             if (response.IsSuccessful)
             {
                 TempData["period"] = $"Your next period starts on {response.Result.startDate} and ends on {response.Result.endDate}";

@@ -21,6 +21,12 @@ namespace PeriodTrackerMVC
                 opts.UseSqlServer(periodTracker);
 
             });
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(50);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ITrackerService, TrackerService>();
 
@@ -37,13 +43,14 @@ namespace PeriodTrackerMVC
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseSession();
             app.UseRouting();
 
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Tracker}/{action=GetNextPeriod}");
+                pattern: "{controller=Landing}/{action=Index}");
 
             app.Run();
         }

@@ -9,6 +9,7 @@ namespace PeriodTracker.BLL.Model
 {
     public class UserVM
     {
+        public int Id { get; set; }
         [Required]
         public string Firstname { get; set; }
         [Required]

@@ -21,14 +21,11 @@ namespace PeriodTrackerMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> LogIn(string email, string password)
         {
-            /*if (!ModelState.IsValid)
-            {
-                return RedirectToAction("LogIn");
-            }*/
 
             var response = await _userService.LogInAsync(email, password);
             if (response.IsSuccessful)
             {
+                HttpContext.Session.SetInt32("UserId", response.Result.Id);
                 TempData["user"] = response.Result.UserName;
                 return RedirectToAction("Index", "Home");
             }

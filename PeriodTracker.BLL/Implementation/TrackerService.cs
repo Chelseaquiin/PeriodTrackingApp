@@ -2,6 +2,7 @@
 using PeriodTracker.BLL.Model;
 using PeriodTracker.DAL.Models;
 using PeriodTracker.DAL.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace PeriodTracker.BLL.Implementation
 {
@@ -48,6 +49,42 @@ namespace PeriodTracker.BLL.Implementation
                Message = "Invalid fields",
                IsSuccessful = false,  
            };
+        }
+
+        public async Task<Response<(DateTime, DateTime)>> GetMyNextPeriod(int userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (user is not null)
+            {
+                if(!user.PeriodDetails.Any())
+                    return new Response<(DateTime, DateTime)>
+                    {
+                        Message = "Please add your period details",
+                        IsSuccessful = false,
+                    };
+                else
+                {
+                    var periodDetail = await _context.PeriodDetails
+                        .Where(u => u.UserId != userId)
+                        .OrderBy(x => x.LastPeriod).FirstOrDefaultAsync();
+                    if (periodDetail is not null)
+                    {
+                        return GetNextPeriod(periodDetail.LastPeriod,
+                            (byte)periodDetail.CycleLength,
+                            (byte)periodDetail.PeriodLength);
+                    }
+                }
+                
+                //var periodDetails = new PeriodDetail { UserId = userId, LastPeriod = DateTime.Now };
+                //await _context.PeriodDetails.AddAsync(periodDetails);
+                //await _context.SaveChangesAsync();
+            }
+            return new Response<(DateTime, DateTime)>
+            {
+                Message = "Invalid user",
+                IsSuccessful = false,
+            };
         }
         public Response<DateTime> GetOvulationDay(DateTime lastPeriodStartDate)
         {

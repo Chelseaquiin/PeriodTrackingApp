@@ -25,6 +25,7 @@ namespace PeriodTracker.BLL.Implementation
                     IsSuccessful = true,
                     Result = new UserVM
                     {
+                        Id = user.UserId,
                         Firstname = user.FirstName,
                         Lastname = user.LastName,
                         Email = email,

@@ -1,0 +1,69 @@
+﻿@using PeriodTracker.BLL.Model;
+<h2>Welcome to our webiste</h2>
+<div class="container bg-light">
+    <style>
+        .last-period {
+            float: left;
+        }
+
+        .cycle-length {
+            float: right;
+        }
+
+        .period-length {
+            margin-left: 65vh;
+            margin-right: 65vh;
+        }
+
+        .form-group {
+            margin-top: 20vh;
+        }
+
+        .start-tracking {
+            margin-left: 70vh;
+            margin-right: 70vh;
+            margin-top: 10vh;
+        }
+    </style>
+
+
+    @model PeriodDetailsVM;
+
+    @{
+        ViewData["Title"] = "Period Details";
+        var nextPeriod = ViewBag.nextPeriod;
+        var errorMessage = ViewData["errorMessage"];
+    }
+
+    <h2>Track Your Next Period</h2>
+    <hr />
+    @if (nextPeriod is not null)
+    {
+        <span class="alert alert-success">@nextPeriod</span>
+    }
+    
+    <form asp-action="GetNextPeriod" class="form-group">
+        <div class="last-period">
+            <label for="exampleInputEmail1">Last Period</label>
+            <input asp-for="LastPeriod" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            <span asp-validation-for="LastPeriod" class="text-danger"></span>
+        </div>
+        <div class="cycle-length">
+            <label for="exampleInputPassword1">Cycle Length</label>
+            <input asp-for="CycleLength" type="number" class="form-control" id="exampleInputPassword1">
+            <span asp-validation-for="CycleLength" class="text-danger"></span>
+        </div>
+        <div class="period-length">
+            <label for="exampleInputEmail1">Period Length</label>
+            <input asp-for="PeriodLength" type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            <span asp-validation-for="PeriodLength" class="text-danger"></span>
+        </div>
+        @*<div class="form-group">
+        <label for="exampleInputPassword1">Note</label>
+        <input asp-for="Note" type="text" class="form-control" id="exampleInputPassword1" placeholder="Add a description">
+        </div>*@
+        <div class="start-tracking">
+            <input type="submit" value="Start Tracking" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
