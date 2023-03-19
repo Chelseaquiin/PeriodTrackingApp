@@ -18,6 +18,6 @@ namespace PeriodTracker.BLL.Model
         [Range(25, 35, ErrorMessage = "should be between the range of 25 and 35")]
         public byte CycleLength { get; set; }
         //[StringLength(200), MinLength(20)]
-        //public string Note { get; set; }
+        public string Note { get; set; }
     }
 }

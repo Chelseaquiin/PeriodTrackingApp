@@ -27,7 +27,46 @@ namespace PeriodTrackerMVC.Controllers
             var userId = HttpContext.Session.GetInt32("UserId");
             if (userId.HasValue)
             {
-                var response = await trackerService.GetMyNextPeriod(userId.Value);
+                var response = await trackerService.GetSafePeriodAsync(userId.Value);
+                ViewData["nextPeriod"] = $"your period starts on {response.Result.Item1} and ends on {response.Result.Item2}";
+
+                return View();
+            }
+            return View("Index");
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetMyFertilityWindow()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId.HasValue)
+            {
+                var response = await trackerService.GetFertilityWindowAsync(userId.Value);
+                ViewData["nextPeriod"] = $"your period is on {response.Result.Item2}";
+
+                return View();
+            }
+            return View("Index");
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetMyOvulationDay()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId.HasValue)
+            {
+                var response = await trackerService.GetOvulationDayAsync(userId.Value);
+                ViewData["nextPeriod"] = $"your period is on {response.Result.Item2}";
+
+                return View();
+            }
+            return View("Index");
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetMySafePeriod()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId.HasValue)
+            {
+                var response = await trackerService.GetSafePeriodAsync(userId.Value);
                 ViewData["nextPeriod"] = $"your period is on {response.Result.Item2}";
 
                 return View();

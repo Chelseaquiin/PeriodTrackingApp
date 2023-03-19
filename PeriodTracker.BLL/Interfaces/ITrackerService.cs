@@ -15,6 +15,8 @@ namespace PeriodTracker.BLL.Interfaces
         public Response<(DateTime, DateTime)> GetSafePeriod(DateTime lastPeriodStartDate, byte cycleLength);
         public Response<DateTime> GetOvulationDay(DateTime lastPeriodStartDate);
         public Task<Response<PeriodDetailsVM>> GetPeriodDetailsAsync(PeriodDetailsVM periodDetail);
-        Task<Response<(DateTime, DateTime)>> GetMyNextPeriod(int userId);
+        Task<Response<(DateTime, DateTime)>> GetSafePeriodAsync(int userId);
+        Task<Response<(DateTime, DateTime)>> GetOvulationDayAsync(int userId);
+        Task<Response<(DateTime, DateTime)>> GetFertilityWindowAsync(int userId);
     }
 }
