@@ -8,7 +8,7 @@ using PeriodTracker.BLL.Model;
 
 namespace PeriodTracker.BLL.Interfaces
 {
-    public interface IUserService
+    public interface IAuthService
     {
         //public Task<Response<UserVM>> GetUser(int Id);
         public Task<Response<UserVM>> LogInAsync(string email, string password);

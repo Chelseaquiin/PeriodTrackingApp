@@ -6,11 +6,11 @@ namespace PeriodTrackerMVC.Controllers
 {
     public class AuthenticationController : Controller
     {
-        private readonly IUserService _userService;
+        private readonly IAuthService _authService;
 
-        public AuthenticationController(IUserService userService)
+        public AuthenticationController(IAuthService authService)
         {
-            _userService = userService;
+            _authService = authService;
         }
 
         public IActionResult Index()
@@ -22,7 +22,7 @@ namespace PeriodTrackerMVC.Controllers
         public async Task<IActionResult> LogIn(string email, string password)
         {
 
-            var response = await _userService.LogInAsync(email, password);
+            var response = await _authService.LogInAsync(email, password);
             if (response.IsSuccessful)
             {
                 HttpContext.Session.SetInt32("UserId", response.Result.Id);
@@ -50,13 +50,14 @@ namespace PeriodTrackerMVC.Controllers
         public async Task<IActionResult> SignUp(UserVM user)
         {
 
-            var response = await _userService.SignUpAsync(user);
+            var response = await _authService.SignUpAsync(user);
             if (!response.IsSuccessful)
             {
                 return Ok(response.Message);
             }
             else
             {
+                HttpContext.Session.SetInt32("UserId", response.Result.Id);
                 TempData["user"] = response.Result.UserName;
 
                 return RedirectToAction("Index", "Home");

@@ -5,11 +5,11 @@ using PeriodTracker.DAL.Models;
 
 namespace PeriodTracker.BLL.Implementation
 {
-    public class UserService : IUserService
+    public class AuthService : IAuthService
     {
 
         private readonly PeriodTrackerDbContext _context;
-        public UserService(PeriodTrackerDbContext context)
+        public AuthService(PeriodTrackerDbContext context)
         {
             _context = context;
         }

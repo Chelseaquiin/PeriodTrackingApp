@@ -27,7 +27,7 @@ namespace PeriodTrackerMVC
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
-            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<ITrackerService, TrackerService>();
 
             var app = builder.Build();

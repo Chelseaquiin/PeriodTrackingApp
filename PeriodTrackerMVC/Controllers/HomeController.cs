@@ -74,26 +74,7 @@ namespace PeriodTrackerMVC.Controllers
             return View("Index");
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-        public IActionResult About()
-        {
-            return View();
-        }
-        public IActionResult Contact()
-        {
-            return View();
-        }
-        public IActionResult SignUp()
-        {
-            return View();
-        }
-        public IActionResult LogIn()
-        {
-            return View();
-        }
+ 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
