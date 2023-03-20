@@ -25,7 +25,7 @@
     </style>
     </div>
 
-    @model PeriodDetailsVM;
+    @model BasePeriodDetailsVM;
 
     @{
         ViewData["Title"] = "Period Details";
@@ -62,4 +62,25 @@
             </div>
         </div>
     
+</form>
+<form asp-action="GetFertilityWindow">
+    <div class="row">
+        <div class="col-sm">
+            <input type="submit" value="Get Fertility Window" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
+<form asp-action="GetMySafePeriod">
+    <div class="row">
+        <div class="col-sm">
+            <input type="submit" value="Get Safe Period" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
+<form asp-action="GetOvulationDay">
+    <div class="row">
+        <div class="col-sm">
+            <input type="submit" value="Get Ovulation Day" class="btn btn-primary" />
+        </div>
+    </div>
 </form>
